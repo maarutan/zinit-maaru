@@ -41,6 +41,8 @@ Make sure to run `p10k configure` after installing the theme to set up your prom
 ```bash
 git clone https://github.com/maarutan/zinit.zsh-maaru
 cd zinit.zsh-maaru
+
+# install
 ./install.sh
 ```
 
