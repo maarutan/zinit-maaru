@@ -17,52 +17,61 @@ FILES_TO_MOVE=(
     "$SRC_DIR/.zsh:$HOME/.zsh"
 )
 
-# Move files dynamically
+# Move files with user confirmation
 for file_pair in "${FILES_TO_MOVE[@]}"; do
     src="${file_pair%%:*}"  # Source
     dest="${file_pair##*:}"  # Destination
 
     if [ -e "$dest" ]; then
-        echo "File $dest already exists. Do you want to save it to $SAVE_DIR? (y/n, default: y)"
-        read -t 5 -n 1 response
-        response=${response:-y}
+        while true; do
+            echo "File $dest already exists. Do you want to save it to $SAVE_DIR? (y/n)"
+            read -n 1 response
+            echo
+            case "$response" in
+                y|Y)
+                    mv "$dest" "$SAVE_DIR/$(basename $dest)"
+                    echo "Saved $dest to $SAVE_DIR."
+                    break
+                    ;;
+                n|N)
+                    echo "Skipped saving $dest."
+                    break
+                    ;;
+                *)
+                    эхо  "Please enter y or n."
+                    ;;
+            выходной 
+        сделанный 
+    фи 
 
-        if [[ "$response" == "y" ]]; then
-            mv "$dest" "$SAVE_DIR/$(basename $dest)"
-            echo "Saved $dest to $SAVE_DIR."
-        else
-            echo "Skipped saving $dest."
-        fi
-    fi
+    если  [ -e "$src" ]; then
+        mv   "  $src  "   "  $dest  " 
+        эхо   "Успешно перемещено: $src -> $dest"
+    else 
+        echo   "Исходный файл не найден: $src. Skipping..."
+    Fi 
+    echo 
+сделанный 
 
-    if [ -e "$src" ]; then
-        mv "$src" "$dest"
-        echo "Successfully moved: $src -> $dest"
-    else
-        echo "Source file not found: $src. Skipping..."
-    fi
-    echo
-done
-
-# Check for Zinit installation
+# Проверьте установку Zinit 
 ZINIT_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/zinit/zinit.git"
-if [ ! -f "$ZINIT_HOME/zinit.zsh" ]; then
-    echo "Zinit is not installed. Installing Zinit..."
-    mkdir -p "$(dirname $ZINIT_HOME)"
-    git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
-    echo "Zinit installation completed."
-else
-    echo "Zinit is already installed."
-fi
+если  [ ! -f "$ZINIT_HOME/zinit.zsh" ]; then
+    эхо   "Зинит не установлен. Установка Зинита..." 
+    mkdir   -p   " $(dirname  $ZINIT_HOME )"
+    мерзавец  clone https://github.com/zdharma-continuum/zinit.git  " $ZINIT_HOME"
+    echo   «Установка Зинита завершена». 
+еще 
+    echo   "Зинит уже установлен." 
+фи 
 
-# Source .zshrc to load configuration dynamically
-if [ -f "$HOME/.zshrc" ]; then
-    echo "Sourcing $HOME/.zshrc to apply changes..."
-    sleep 2
-    source "$HOME/.zshrc"
-else
-    echo "No .zshrc file found to source. Please check the operation."
-fi
+# Исходный файл .zshrc для динамической загрузки конфигурации 
+если  [  -f  "$HOME/.zshrc" ]; then
+    echo   "Использование  $HOME  /.zshrc для применения изменений..." 
+    спать   2 
+    источник   "  $HOME  /.zshrc" 
+еще 
+    echo   «Исходный файл .zshrc не найден. Проверьте работу». 
+фи 
 
-# Completion message
-echo "All operations completed."
+# Сообщение о завершении 
+echo   «Все операции завершены». 
