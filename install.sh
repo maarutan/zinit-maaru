@@ -1,31 +1,21 @@
 #!/bin/bash
 
-# Check for Zinit installation
-ZINIT_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/zinit/zinit.git"
-if [ ! -f "$ZINIT_HOME/zinit.zsh" ]; then
-    echo "Zinit is not installed. Installing Zinit..."
-    mkdir -p "$(dirname $ZINIT_HOME)"
-    git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
-else
-    echo "Zinit is already installed."
-fi
-
 # Define paths
 SRC_DIR="$HOME/zinit.zsh-maaru"
 SAVE_DIR="$HOME/zsh-save"
-
-# Files to move
-FILES_TO_MOVE=(
-    "$SRC_DIR/.zshrc:$HOME/.zshrc"
-    "$SRC_DIR/.zsh:$HOME/.zsh"
-    "$SRC_DIR/.p10k.zsh:$HOME/.p10k.zsh"
-)
 
 # Create directory for saving old configs
 if [ ! -d "$SAVE_DIR" ]; then
     mkdir -p "$SAVE_DIR"
     echo "Created directory to save old configs: $SAVE_DIR"
 fi
+
+# Files to move
+FILES_TO_MOVE=(
+    "$SRC_DIR/.zshrc:$HOME/.zshrc"
+    "$SRC_DIR/.p10k.zsh:$HOME/.p10k.zsh"
+    "$SRC_DIR/.zsh:$HOME/.zsh"
+)
 
 # Move files
 for file_pair in "${FILES_TO_MOVE[@]}"; do
@@ -42,19 +32,28 @@ for file_pair in "${FILES_TO_MOVE[@]}"; do
         mv "$src" "$dest"
         echo "Successfully moved: $src -> $dest"
     else
-        echo "File not found: $src"
-    fi 
-    эхо 
+        echo "File not found: $src. Skipping..."
+    fi
 done
 
-# Lazy load Zinit
-если  [ -f "$HOME/.zshrc" ]; then
-    echo   "Использование  $HOME  /.zshrc для применения изменений..." 
-    спать   2 
-    источник   "  $HOME  /.zshrc" 
+# Check for Zinit installation
+ZINIT_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/zinit/zinit.git"
+if [ ! -f "$ZINIT_HOME/zinit.zsh" ]; then
+    echo "Zinit is not installed. Installing Zinit..."
+    mkdir -p "$(dirname $ZINIT_HOME)"
+    git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 else
-    эхо  "No .zshrc file found to source. Please check the operation."
-fi 
+    echo "Zinit is already installed."
+fi
 
-# Сообщение о завершении 
-echo   «Все операции завершены». 
+# Lazy load Zinit
+if [ -f "$HOME/.zshrc" ]; then
+    echo "Sourcing $HOME/.zshrc to apply changes..."
+    sleep 2
+    source "$HOME/.zshrc"
+else
+    echo "No .zshrc file found to source. Please check the operation."
+fi
+
+# Completion message
+echo "All operations completed."
