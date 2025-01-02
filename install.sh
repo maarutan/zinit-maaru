@@ -53,14 +53,5 @@ else
     echo "Zinit is already installed."
 fi
 
-# Source .zshrc
-if [ -f "$HOME/.zshrc" ]; then
-    echo "Sourcing $HOME/.zshrc to apply changes..."
-    sleep 2
-    source "$HOME/.zshrc"
-else
-    echo "No .zshrc file found to source. Please check the operation."
-fi
-
 # Completion message
 echo "All operations completed."
