@@ -7,7 +7,8 @@ if [ ! -f "$ZINIT_HOME/zinit.zsh" ]; then
     mkdir -p "$(dirname $ZINIT_HOME)"
     git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 else
-    echo "Zinit is already installed."
+    echo "Zinit is already installed. Updating Zinit..."
+    git -C "$ZINIT_HOME" pull
 fi
 
 # Define paths
@@ -47,8 +48,10 @@ for file_pair in "${FILES_TO_MOVE[@]}"; do
     echo
 done
 
-# Completion message
-
-echo "All operations completed."
+# Source .zshrc to apply changes
+echo "Sourcing $HOME/.zshrc to apply changes..."
 sleep 2
 source "$HOME/.zshrc"
+
+# Completion message
+echo "All operations completed."
