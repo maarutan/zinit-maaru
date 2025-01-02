@@ -4,74 +4,63 @@
 SRC_DIR="$HOME/zinit.zsh-maaru"
 SAVE_DIR="$HOME/zsh-save"
 
-# Create directory for saving old configs if necessary
+# Create directory for saving old configs
 if [ ! -d "$SAVE_DIR" ]; then
     mkdir -p "$SAVE_DIR"
     echo "Created directory to save old configs: $SAVE_DIR"
 fi
 
-# Files to move
-FILES_TO_MOVE=(
-    "$SRC_DIR/.zshrc:$HOME/.zshrc"
-    "$SRC_DIR/.p10k.zsh:$HOME/.p10k.zsh"
-    "$SRC_DIR/.zsh:$HOME/.zsh"
-)
-
-# Move files with user confirmation
-for file_pair in "${FILES_TO_MOVE[@]}"; do
-    src="${file_pair%%:*}"  # Source
-    dest="${file_pair##*:}"  # Destination
-
+# Move specific files
+move_file() {
+    local src=$1
+    local dest=$2
+    
     if [ -e "$dest" ]; then
-        while true; do
-            echo "File $dest already exists. Do you want to save it to $SAVE_DIR? (y/n)"
-            read -n 1 response
-            echo
-            case "$response" in
-                y|Y)
-                    mv "$dest" "$SAVE_DIR/$(basename $dest)"
-                    echo "Saved $dest to $SAVE_DIR."
-                    break
-                    ;;
-                n|N)
-                    echo "Skipped saving $dest."
-                    break
-                    ;;
-                *)
-                    эхо  "Please enter y or n."
-                    ;;
-            выходной 
-        сделанный 
-    фи 
+        echo "File $dest already exists. Do you want to save it to $SAVE_DIR? (y/n)"
+        read -n 1 response
+        echo # Move to a new line after input
+        if [[ "$response" == "y" || "$response" == "Y" ]]; then
+            mv "$dest" "$SAVE_DIR/$(basename $dest)"
+            echo "Saved $dest to $SAVE_DIR."
+        elif [[ "$response" == "n" || "$response" == "N" ]]; then
+            echo "Skipped saving $dest."
+        else
+            echo "Invalid input. Skipping save for $dest."
+        fi
+    fi
 
-    если  [ -e "$src" ]; then
-        mv   "  $src  "   "  $dest  " 
-        эхо   "Успешно перемещено: $src -> $dest"
-    else 
-        echo   "Исходный файл не найден: $src. Skipping..."
-    Fi 
-    echo 
-сделанный 
+    if [ -e "$src" ]; then
+        mv "$src" "$dest"
+        echo "Moved $src to $dest."
+    else
+        echo "Source file $src not found. Skipping..."
+    fi
+}
 
-# Проверьте установку Zinit 
+# Move files
+move_file "$SRC_DIR/.zshrc" "$HOME/.zshrc"
+move_file "$SRC_DIR/.p10k.zsh" "$HOME/.p10k.zsh"
+move_file "$SRC_DIR/.zsh" "$HOME/.zsh"
+
+# Check for Zinit installation
 ZINIT_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/zinit/zinit.git"
-если  [ ! -f "$ZINIT_HOME/zinit.zsh" ]; then
-    эхо   "Зинит не установлен. Установка Зинита..." 
-    mkdir   -p   " $(dirname  $ZINIT_HOME )"
-    мерзавец  clone https://github.com/zdharma-continuum/zinit.git  " $ZINIT_HOME"
-    echo   «Установка Зинита завершена». 
-еще 
-    echo   "Зинит уже установлен." 
-фи 
+if [ ! -f "$ZINIT_HOME/zinit.zsh" ]; then
+    echo "Zinit is not installed. Installing Zinit..."
+    mkdir -p "$(dirname $ZINIT_HOME)"
+    git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+    echo "Zinit installation completed."
+else
+    echo "Zinit is already installed."
+fi
 
-# Исходный файл .zshrc для динамической загрузки конфигурации 
-если  [  -f  "$HOME/.zshrc" ]; then
-    echo   "Использование  $HOME  /.zshrc для применения изменений..." 
-    спать   2 
-    источник   "  $HOME  /.zshrc" 
-еще 
-    echo   «Исходный файл .zshrc не найден. Проверьте работу». 
-фи 
+# Source .zshrc
+if [ -f "$HOME/.zshrc" ]; then
+    echo "Sourcing $HOME/.zshrc to apply changes..."
+    sleep 2
+    source "$HOME/.zshrc"
+else
+    echo "No .zshrc file found to source. Please check the operation."
+fi
 
-# Сообщение о завершении 
-echo   «Все операции завершены». 
+# Completion message
+echo "All operations completed."
