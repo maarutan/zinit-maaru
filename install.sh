@@ -7,8 +7,7 @@ if [ ! -f "$ZINIT_HOME/zinit.zsh" ]; then
     mkdir -p "$(dirname $ZINIT_HOME)"
     git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 else
-    echo "Zinit is already installed. Updating Zinit..."
-    git -C "$ZINIT_HOME" pull
+    echo "Zinit is already installed."
 fi
 
 # Define paths
@@ -44,14 +43,18 @@ for file_pair in "${FILES_TO_MOVE[@]}"; do
         echo "Successfully moved: $src -> $dest"
     else
         echo "File not found: $src"
-    fi
-    echo
+    fi 
+    эхо 
 done
 
-# Source .zshrc to apply changes
-echo "Sourcing $HOME/.zshrc to apply changes..."
-sleep 2
-source "$HOME/.zshrc"
+# Lazy load Zinit
+если  [ -f "$HOME/.zshrc" ]; then
+    echo   "Использование  $HOME  /.zshrc для применения изменений..." 
+    спать   2 
+    источник   "  $HOME  /.zshrc" 
+else
+    эхо  "No .zshrc file found to source. Please check the operation."
+fi 
 
-# Completion message
-echo "All operations completed."
+# Сообщение о завершении 
+echo   «Все операции завершены». 
