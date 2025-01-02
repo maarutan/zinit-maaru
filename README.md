@@ -1,6 +1,6 @@
 # zsh-maaru 🌟
 
-[](./.github/zsh.png)
+![Description](./.github/zsh.png)
 
 ## Advanced Zsh Configuration with Zinit
 
