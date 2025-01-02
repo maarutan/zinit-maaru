@@ -1,57 +1,60 @@
-#!/bin/bash
+#!/bin/zsh
 
-# Define paths
-SRC_DIR="$HOME/zinit.zsh-maaru"
-SAVE_DIR="$HOME/zsh-save"
-ZINIT_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/zinit/zinit.git"
+# Определение переменных
+HOME_DIR="$HOME"
+BACKUP_DIR="$HOME_DIR/zsh.bak"
 
-# Create directory for saving old configs if necessary
-if [ ! -d "$SAVE_DIR" ]; then
-    mkdir -p "$SAVE_DIR"
-    echo "Created directory to save old configs: $SAVE_DIR"
+# Создание каталога для бэкапов, если его нет
+if [ ! -d "$BACKUP_DIR" ]; then
+    mkdir -p "$BACKUP_DIR"
+    echo "Создан каталог для бэкапов: $BACKUP_DIR"
 fi
 
-# Move specific files
-move_file() {
-    local src=$1
-    local dest=$2
-    
-    if [ -e "$dest" ]; then
-        echo "File $dest already exists. Do you want to save it to $SAVE_DIR? (y/n)"
-        read -n 1 response
-        echo # Move to a new line after input
-        if [[ "$response" == "y" || "$response" == "Y" ]]; then
-            mv "$dest" "$SAVE_DIR/$(basename $dest)"
-            echo "Saved $dest to $SAVE_DIR."
-        elif [[ "$response" == "n" || "$response" == "N" ]]; then
-            echo "Skipped saving $dest."
-        else
-            echo "Invalid input. Skipping save for $dest."
-        fi
+# Перемещение необходимых файлов в домашний каталог
+for FILE in "$HOME/.zshrc" "$HOME/.p10k.zsh" "$HOME/.zsh"; do
+    BASENAME=$(basename "$FILE")
+    TARGET_FILE="$HOME_DIR/$BASENAME"
+    if [ -e "$TARGET_FILE" ]; then
+        # Если файл уже существует, переименовываем в .bak и переносим
+        mv "$TARGET_FILE" "$BACKUP_DIR/${BASENAME}.bak"
+        echo "Перемещен в бэкап: $TARGET_FILE -> $BACKUP_DIR/${BASENAME}.bak"
+    fi
+    # Перемещаем файл в домашний каталог
+    if [ -e "$FILE" ]; then
+        mv "$FILE" "$HOME_DIR"
+        echo "Файл перемещен: $FILE -> $HOME_DIR"
     fi
 
-    if [ -e "$src" ]; then
-        mv "$src" "$dest"
-        echo "Moved $src to $dest."
-    else
-        echo "Source file $src not found. Skipping..."
-    fi
-}
+done
 
-# Move files
-move_file "$SRC_DIR/.zshrc" "$HOME/.zshrc"
-move_file "$SRC_DIR/.p10k.zsh" "$HOME/.p10k.zsh"
-move_file "$SRC_DIR/.zsh" "$HOME/.zsh"
-
-# Check for Zinit installation
-if [ ! -f "$ZINIT_HOME/zinit.zsh" ]; then
-    echo "Zinit is not installed. Installing Zinit..."
-    mkdir -p "$(dirname $ZINIT_HOME)"
-    git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
-    echo "Zinit installation completed."
+# Проверка наличия Zinit
+if command -v zinit > /dev/null 2>&1; then
+    echo "Zinit уже установлен. Обновляем .zshrc..."
+    source "$HOME_DIR/.zshrc"
 else
-    echo "Zinit is already installed."
+    echo "Zinit не найден. Устанавливаем..."
+    git clone https://github.com/maarutan/zinit.zsh-maaru "$HOME_DIR/zinit.zsh-maaru"
+    cd "$HOME_DIR/zinit.zsh-maaru" || exit
+    ./install.sh
+    cd "$HOME_DIR" || exit
+    echo "Zinit установлен. Обновляем .zshrc..."
+    source "$HOME_DIR/.zshrc"
 fi
 
-# Completion message
-echo "All operations completed."
+# Проверка и обновление Zsh
+if command -v zsh > /dev/null 2>&1; then
+    echo "Zsh уже установлен. Обновляем..."
+    source "$HOME_DIR/.zshrc"
+else
+    echo "Zsh не найден. Устанавливаем..."
+    if [ -x "$(command -v apt-get)" ]; then
+        sudo apt-get update && sudo apt-get install zsh -y
+    elif [ -x "$(command -v brew)" ]; then
+        brew install zsh
+    else
+        echo "Пакетный менеджер не найден. Установите Zsh вручную."
+        exit 1
+    fi
+    echo "Zsh установлен. Обновляем..."
+    source "$HOME_DIR/.zshrc"
+fi
