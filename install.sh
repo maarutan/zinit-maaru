@@ -48,4 +48,5 @@ for file_pair in "${FILES_TO_MOVE[@]}"; do
 done
 
 # Completion message
+source "$HOME/.zshrc"
 echo "All operations completed."
