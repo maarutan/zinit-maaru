@@ -3,8 +3,9 @@
 # Define paths
 SRC_DIR="$HOME/zinit.zsh-maaru"
 SAVE_DIR="$HOME/zsh-save"
+ZINIT_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/zinit/zinit.git"
 
-# Create directory for saving old configs
+# Create directory for saving old configs if necessary
 if [ ! -d "$SAVE_DIR" ]; then
     mkdir -p "$SAVE_DIR"
     echo "Created directory to save old configs: $SAVE_DIR"
@@ -43,7 +44,6 @@ move_file "$SRC_DIR/.p10k.zsh" "$HOME/.p10k.zsh"
 move_file "$SRC_DIR/.zsh" "$HOME/.zsh"
 
 # Check for Zinit installation
-ZINIT_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/zinit/zinit.git"
 if [ ! -f "$ZINIT_HOME/zinit.zsh" ]; then
     echo "Zinit is not installed. Installing Zinit..."
     mkdir -p "$(dirname $ZINIT_HOME)"
