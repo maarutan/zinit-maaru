@@ -3,7 +3,7 @@
 ## My Zsh Configuration with Zinit
 
 [zinit (click me 🥳)](https://github.com/zdharma-continuum/zinit)  
-[Install Script (click me 🥳🥳)](install)
+[Install Script (click me 🥳🥳)](install.sh)
 
 ## Zsh Plugins
 
