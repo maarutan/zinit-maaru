@@ -8,3 +8,4 @@ source "$HOME/.zsh/theme.zsh"
 
 # connect Zinit
 source "$HOME/.zsh/zinit.zsh"
+### End of Zinit's installer chunk

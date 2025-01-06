@@ -52,7 +52,6 @@ alias lt='exa --tree --icons --color'
 alias ls='exa --icons --color=auto'   
 alias y="yazi" 
 alias cpp="copypath" 
-alias gp="grep"
 
 # utils
 alias g="z"
