@@ -9,8 +9,8 @@
 source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
 
 # fast run load now
-zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
+zinit light zsh-users/zsh-autosuggestions
 
 # fast run load later
 zinit wait lucid for OMZ::plugins/git

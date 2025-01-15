@@ -38,7 +38,8 @@ alias grs="git reset"
 alias gon="git open"
 
 # system
-alias cls="clear"
+alias cls="clear && $(basename $SHELL)"
+alias cls!="clear"
 alias rzh="rm -rf $HOME/.zsh/.zsh_history"
 alias nzh="nvim $HOME/.zsh/.zsh_history"
 alias ex="exit"
@@ -56,7 +57,7 @@ alias cpp="copypath"
 
 # utils
 alias g="z"
-alias gay="$HOME/suckless/scripts/gay.sh"
+alias gay="$HOME/.suckless/scripts/gay.sh"
 alias nzsh="nvim ~/.zshrc"
 alias hzsh="nvim $HOME/.zsh/.zsh_history"
 alias matrix="unimatrix -b -s 95  -c blue"
