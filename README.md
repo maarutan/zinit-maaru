@@ -9,17 +9,15 @@
 
 ```bash
 # zinit install plugins
-zsh-users/zsh-autosuggestions
-agkozak/zsh-z
-Aloxaf/fzf-tab
-zsh-users/zsh-completions
-djui/alias-tips
-zdharma-continuum/fast-syntax-highlighting
-zsh-users/zsh-history-substring-search
-seebi/dircolors-solarized
-paulirish/git-open
-hlissner/zsh-autopair
-MichaelAquilina/zsh-auto-notify
+zinit light zsh-users/zsh-autosuggestions
+zinit light agkozak/zsh-z
+zinit light Aloxaf/fzf-tab
+zinit light zsh-users/zsh-completions
+zinit light djui/alias-tips
+zinit light zdharma-continuum/fast-syntax-highlighting
+zinit light zsh-users/zsh-history-substring-search
+zinit light seebi/dircolors-solarized
+zinit light paulirish/git-open
 ```
 
 ### Directory Structure
