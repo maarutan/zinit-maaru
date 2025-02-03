@@ -5,10 +5,18 @@ function abbr() {
 }
 
 function expand-abbr() {
-    local lastword="${(L)${LBUFFER##* }}"
-    if [[ -n ${abbr[$lastword]} ]]; then
-        LBUFFER="${LBUFFER%$lastword}${abbr[$lastword]} "
-    fi
+    local words=(${(z)LBUFFER})
+    local new_buffer=""
+
+    for word in $words; do
+        if [[ -n ${abbr[$word]} ]]; then
+            new_buffer+="${abbr[$word]} "
+        else
+            new_buffer+="$word "
+        fi
+    done
+
+    LBUFFER="$new_buffer"
     zle magic-space
 }
 
@@ -21,8 +29,8 @@ function smart_enter() {
 
 zle -N smart_enter
 
-bindkey ' ' expand-abbr # with space
-bindkey '^M' smart_enter # with enter
-bindkey '^ ' magic-space # with ctrl-space
-bindkey -M isearch " " magic-space # with space in search
+bindkey ' ' expand-abbr
+bindkey '^M' smart_enter
+bindkey '^ ' magic-space
+bindkey -M isearch " " magic-space
 
