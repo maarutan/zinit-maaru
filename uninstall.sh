@@ -40,9 +40,9 @@ fi
 
 # 2. Removing .zsh directory
 echo -e "\n${BLUE}[2/5] Checking for .zsh directory...${NC}"
-if [ -d "$HOME/.zsh" ]; then
+if [ -d "$HOME/.config/zsh" ]; then
     echo -e "${YELLOW}.zsh directory found. Removing...${NC}"
-    rm -rf "$HOME/.zsh"
+    rm -rf "$HOME/.config/zsh"
     echo -e "${GREEN}✔️  .zsh directory removed successfully.${NC}"
 else
     echo -e "${RED}❌ .zsh directory not found. Skipping...${NC}"

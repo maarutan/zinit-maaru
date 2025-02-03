@@ -39,24 +39,37 @@ fi
 echo -e "\n${BLUE}[1/5] Creating necessary directories...${NC}"
 mkdir -p "$HOME/.config/zsh/functions" "$HOME/.config/zsh/plugins"
 
-# 2. Copy files from repository
-echo -e "\n${BLUE}[2/5] Copying files from repository...${NC}"
-
-cp "$REPO_DIR/.zshrc" "$HOME/.zshrc"
+# 2. Copy Powerlevel10k configuration first
+echo -e "\n${BLUE}[2/5] Copying Powerlevel10k configuration...${NC}"
 cp "$REPO_DIR/.p10k.zsh" "$HOME/.p10k.zsh"
-rsync -av --ignore-existing "$REPO_DIR/.config/zsh/" "$HOME/.config/zsh/"
 
-# 3. Install Zinit if not installed
-echo -e "\n${BLUE}[3/5] Checking for Zinit...${NC}"
+# 3. Copy .zshrc file
+echo -e "\n${BLUE}[3/5] Copying .zshrc configuration...${NC}"
+cp "$REPO_DIR/.zshrc" "$HOME/.zshrc"
+
+# 4. Sync additional Zsh configurations
+echo -e "\n${BLUE}[4/5] Syncing additional Zsh configurations...${NC}"
+rsync -av --ignore-existing "$REPO_DIR/zsh/" "$HOME/.config/zsh/"
+
+# 5. Install Zinit if not installed
+echo -e "\n${BLUE}[5/5] Checking for Zinit...${NC}"
 if [ ! -d "$HOME/.local/share/zinit" ]; then
-    echo -e "${YELLOW}Zinit is not installed. Please install it by running:${NC}"
-    echo -e "${GREEN}bash -c \"\$(curl -fsSL https://git.io/zinit-install)\"${NC}"
+    echo -e "${YELLOW}Zinit is not installed. Installing now...${NC}"
+    yes n | bash -c "$(curl -fsSL https://git.io/zinit-install)"  # Automatically declines the prompt
 else
     echo -e "${GREEN}✔️  Zinit is already installed.${NC}"
 fi
 
-# 4. Switch to Zsh
-echo -e "\n${BLUE}[4/5] Switching to Zsh...${NC}"
+# 6. Fix Zinit loading in .zshrc
+echo -e "\n${BLUE}[6/5] Fixing Zinit loading...${NC}"
+# Ensure Zinit is sourced correctly in .zshrc
+if ! grep -q "source \$HOME/.local/share/zinit/zinit.git/zinit.zsh" "$HOME/.zshrc"; then
+    echo -e "${YELLOW}Adding Zinit source to .zshrc...${NC}"
+    echo "source \$HOME/.local/share/zinit/zinit.git/zinit.zsh" >> "$HOME/.zshrc"
+fi
+
+# Switch to Zsh
+echo -e "\n${BLUE}[Switching to Zsh...]${NC}"
 clear
 echo -e "${CYAN}==============================================${NC}"
 echo -e "${CYAN}     🎉 Installation Completed! 🎉          ${NC}"
@@ -64,5 +77,4 @@ echo -e "${CYAN}==============================================${NC}"
 echo -e "${GREEN}Your Zsh environment is ready. Switching now...${NC}"
 clear
 exec zsh
-
 
