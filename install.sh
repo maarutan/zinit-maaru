@@ -19,98 +19,40 @@ REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # List of required dependencies
 REQUIRED_DEPENDENCIES=("zsh" "curl" "rsync" "git" "fzf" "diffutils")
 
-# Check if pacman is available
-if ! command -v pacman &> /dev/null; then
-    echo -e "${RED}❌ This system is not running Arch Linux or pacman is unavailable. Skipping dependency installation.${NC}"
-else
-    echo -e "${BLUE}🔍 Checking for required dependencies...${NC}"
-    MISSING_DEPENDENCIES=()
-    for dep in "${REQUIRED_DEPENDENCIES[@]}"; do
-        if ! pacman -Qi "$dep" &> /dev/null; then
-            MISSING_DEPENDENCIES+=("$dep")
-        fi
-    done
-
-    if [ "${#MISSING_DEPENDENCIES[@]}" -eq 0 ]; then
-        echo -e "${GREEN}✔️  All dependencies are already installed.${NC}"
-    else
-        echo -e "${YELLOW}⚠️  Missing dependencies: ${MISSING_DEPENDENCIES[*]}.${NC}"
-        if confirm "Would you like to install the missing dependencies?"; then
-            sudo pacman -Syu --needed "${MISSING_DEPENDENCIES[@]}"
-        else
-            echo -e "${RED}⚠️  Missing dependencies will not be installed. Installation may fail.${NC}"
-        fi
+# Check for required dependencies
+MISSING_DEPENDENCIES=()
+for dep in "${REQUIRED_DEPENDENCIES[@]}"; do
+    if ! command -v "$dep" &> /dev/null; then
+        MISSING_DEPENDENCIES+=("$dep")
     fi
-fi
-echo -e "${YELLOW}⚠️  Note: Powerlevel10k works best with Nerd Fonts. You can install them manually from https://www.nerdfonts.com/.${NC}"
+done
 
-# Function to confirm user choice
-confirm() {
-    while true; do
-        read -p "$1 [y/n]: " choice
-        case "$choice" in
-            y|Y ) return 0 ;;  # Yes
-            n|N ) return 1 ;;  # No
-            * ) echo "Please enter y or n." ;;
-        esac
-    done
-}
+# Report missing dependencies
+if [ "${#MISSING_DEPENDENCIES[@]}" -gt 0 ]; then
+    echo -e "${RED}❌ Missing dependencies: ${MISSING_DEPENDENCIES[*]}.${NC}"
+    echo -e "${YELLOW}To ensure proper functionality, please install these packages with your package manager (e.g., pacman, apt, etc.).${NC}"
+else
+    echo -e "${GREEN}✔️  All required dependencies are installed.${NC}"
+fi
 
 # 1. Check and create necessary directories
-echo -e "\n${BLUE}[1/5] Checking and creating necessary directories...${NC}"
+echo -e "\n${BLUE}[1/5] Creating necessary directories...${NC}"
 mkdir -p "$HOME/.config/zsh/functions" "$HOME/.config/zsh/plugins"
-echo -e "${GREEN}✔️  Directories are ready.${NC}"
 
 # 2. Copy files from repository
-echo -e "\n${BLUE}[2/5] Checking and copying files from repository...${NC}"
+echo -e "\n${BLUE}[2/5] Copying files from repository...${NC}"
 
-# Check and copy .zshrc
-if cmp -s "$REPO_DIR/.zshrc" "$HOME/.zshrc"; then
-    echo -e "${YELLOW}.zshrc is already up-to-date.${NC}"
-else
-    if confirm "Overwrite existing .zshrc?"; then
-        cp "$REPO_DIR/.zshrc" "$HOME/.zshrc"
-        echo -e "${GREEN}✔️  .zshrc updated successfully.${NC}"
-    else
-        echo -e "${RED}✖️  Skipping .zshrc update.${NC}"
-    fi
-fi
+cp "$REPO_DIR/.zshrc" "$HOME/.zshrc"
+cp "$REPO_DIR/.p10k.zsh" "$HOME/.p10k.zsh"
+rsync -av --ignore-existing "$REPO_DIR/.config/zsh/" "$HOME/.config/zsh/"
 
-# Check and copy .p10k.zsh
-if cmp -s "$REPO_DIR/.p10k.zsh" "$HOME/.p10k.zsh"; then
-    echo -e "${YELLOW}.p10k.zsh is already up-to-date.${NC}"
-else
-    if confirm "Overwrite existing .p10k.zsh?"; then
-        cp "$REPO_DIR/.p10k.zsh" "$HOME/.p10k.zsh"
-        echo -e "${GREEN}✔️  .p10k.zsh updated successfully.${NC}"
-    else
-        echo -e "${RED}✖️  Skipping .p10k.zsh update.${NC}"
-    fi
-fi
-
-# Sync .zsh directory
-if confirm "Sync .zsh directory (existing files will be skipped)?"; then
-    rsync -av --ignore-existing "$REPO_DIR/.config/zsh/" "$HOME/.config/zsh/" > /dev/null
-    echo -e "${GREEN}✔️  .zsh contents synced successfully.${NC}"
-else
-    echo -e "${RED}✖️  Skipping .zsh sync.${NC}"
-fi
-
-# 3. Check and install Zinit
-echo -e "\n${BLUE}[3/5] Checking for Zinit installation...${NC}"
+# 3. Install Zinit if not installed
+echo -e "\n${BLUE}[3/5] Checking for Zinit...${NC}"
 if [ ! -d "$HOME/.local/share/zinit" ]; then
-    echo -e "${YELLOW}Zinit not found. Installing...${NC}"
-    yes n | bash -c "$(curl -fsSL https://git.io/zinit-install)"
-    echo -e "${GREEN}✔️  Zinit installed successfully.${NC}"
+    echo -e "${YELLOW}Zinit is not installed. Please install it by running:${NC}"
+    echo -e "${GREEN}bash -c \"\$(curl -fsSL https://git.io/zinit-install)\"${NC}"
 else
-    echo -e "${YELLOW}Zinit is already installed.${NC}"
-    if confirm "Reinstall Zinit?"; then
-        rm -rf "$HOME/.local/share/zinit"
-        yes n | bash -c "$(curl -fsSL https://git.io/zinit-install)"
-        echo -e "${GREEN}✔️  Zinit reinstalled successfully.${NC}"
-    else
-        echo -e "${RED}✖️  Skipping Zinit reinstallation.${NC}"
-    fi
+    echo -e "${GREEN}✔️  Zinit is already installed.${NC}"
 fi
 
 # 4. Switch to Zsh
@@ -122,3 +64,5 @@ echo -e "${CYAN}==============================================${NC}"
 echo -e "${GREEN}Your Zsh environment is ready. Switching now...${NC}"
 clear
 exec zsh
+
+
