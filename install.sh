@@ -58,7 +58,7 @@ confirm() {
 
 # 1. Check and create necessary directories
 echo -e "\n${BLUE}[1/5] Checking and creating necessary directories...${NC}"
-mkdir -p "$HOME/.zsh/functions" "$HOME/.zsh/plugins"
+mkdir -p "$HOME/.config/zsh/functions" "$HOME/.config/zsh/plugins"
 echo -e "${GREEN}✔️  Directories are ready.${NC}"
 
 # 2. Copy files from repository
@@ -90,7 +90,7 @@ fi
 
 # Sync .zsh directory
 if confirm "Sync .zsh directory (existing files will be skipped)?"; then
-    rsync -av --ignore-existing "$REPO_DIR/.zsh/" "$HOME/.zsh/" > /dev/null
+    rsync -av --ignore-existing "$REPO_DIR/.config/zsh/" "$HOME/.config/zsh/" > /dev/null
     echo -e "${GREEN}✔️  .zsh contents synced successfully.${NC}"
 else
     echo -e "${RED}✖️  Skipping .zsh sync.${NC}"
@@ -120,4 +120,5 @@ echo -e "${CYAN}==============================================${NC}"
 echo -e "${CYAN}     🎉 Installation Completed! 🎉          ${NC}"
 echo -e "${CYAN}==============================================${NC}"
 echo -e "${GREEN}Your Zsh environment is ready. Switching now...${NC}"
+clear
 exec zsh
