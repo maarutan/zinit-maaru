@@ -39,9 +39,9 @@ unsetopt CORRECT_ALL
 
 # FZF configuration
 export FZF_DEFAULT_OPTS="
---reverse --ansi --no-multi
---bind=ctrl-u:up,ctrl-e:down,ctrl-n:backward-char,ctrl-i:forward-char,ctrl-b:backward-word,ctrl-h:forward-word
---border --margin=1,0
+--height=100%
+--border
+--preview '([[ -d {} ]] && eza --tree --level=2 --icons {} || bat --style=numbers --color=always {} || cat {})'
 "
 
 # Preview support for FZF

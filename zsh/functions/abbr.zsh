@@ -5,18 +5,10 @@ function abbr() {
 }
 
 function expand-abbr() {
-    local words=(${(z)LBUFFER})
-    local new_buffer=""
-
-    for word in $words; do
-        if [[ -n ${abbr[$word]} ]]; then
-            new_buffer+="${abbr[$word]} "
-        else
-            new_buffer+="$word "
-        fi
-    done
-
-    LBUFFER="$new_buffer"
+    local lastword="${(L)${LBUFFER##* }}"
+    if [[ -n ${abbr[$lastword]} ]]; then
+        LBUFFER="${LBUFFER%$lastword}${abbr[$lastword]} "
+    fi
     zle magic-space
 }
 
