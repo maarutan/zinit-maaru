@@ -10,5 +10,3 @@ source "$HOME/.config/zsh/theme.zsh"
 ### connect Zinit
 source "$HOME/.config/zsh/zinit.zsh"
 ### End of Zinit's installer chunk
-### End of Zinit's installer chunk
-source $HOME/.local/share/zinit/zinit.git/zinit.zsh

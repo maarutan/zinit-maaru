@@ -29,8 +29,6 @@ zinit wait lucid for zdharma-continuum/fast-syntax-highlighting
 ############
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#3A6E9D,bg=none,bold,underline"
 
-
-
 # user scripts
 for file in $HOME/.config/zsh/plugins/*.zsh; do
     source "$file"
