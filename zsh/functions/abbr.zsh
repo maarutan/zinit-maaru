@@ -7,7 +7,7 @@ function abbr() {
 function expand-abbr() {
     local lastword="${(L)${LBUFFER##* }}"
     if [[ -n ${abbr[$lastword]} ]]; then
-        LBUFFER="${LBUFFER%$lastword}${abbr[$lastword]} "
+        LBUFFER="${LBUFFER%$lastword}${abbr[$lastword]}"
     fi
     zle magic-space
 }
