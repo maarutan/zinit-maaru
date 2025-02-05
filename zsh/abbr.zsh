@@ -65,3 +65,16 @@ abbr gon "git open"
 ############
 ## utils ##
 ############
+
+
+##########
+## lang ##
+##########
+
+abbr py "python3"
+abbr py11 "python3.11"
+
+
+
+
+

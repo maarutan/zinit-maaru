@@ -12,17 +12,15 @@ function expand-abbr() {
     zle magic-space
 }
 
-zle -N expand-abbr
 
 function smart_enter() {
-    expand-abbr
+    local lastword="${(L)${LBUFFER##* }}"
+    if [[ -n ${abbr[$lastword]} ]]; then
+        LBUFFER="${LBUFFER%$lastword}${abbr[$lastword]}"
+    fi
     zle .accept-line
 }
 
 zle -N smart_enter
-
-bindkey ' ' expand-abbr
-bindkey '^M' smart_enter
-bindkey '^ ' magic-space
-bindkey -M isearch " " magic-space
+zle -N expand-abbr
 
