@@ -11,6 +11,7 @@
 # fast run load now
 zinit light Aloxaf/fzf-tab
 zinit light zsh-users/zsh-autosuggestions
+zinit light joshskidmore/zsh-fzf-history-search
 
 # fast run load later
 zinit wait lucid for agkozak/zsh-z
@@ -20,7 +21,6 @@ zinit wait lucid for zsh-users/zsh-history-substring-search
 zinit wait lucid for seebi/dircolors-solarized
 zinit wait lucid for paulirish/git-open
 zinit wait lucid for MichaelAquilina/zsh-auto-notify
-zinit wait lucid for joshskidmore/zsh-fzf-history-search
 zinit wait lucid for zdharma-continuum/fast-syntax-highlighting
 ```
 
